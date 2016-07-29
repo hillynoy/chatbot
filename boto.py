@@ -37,7 +37,7 @@ def processUserMsgLevel4(msg):
     user_words = msg.split(" ")
     for word in user_words:
         if any(word in joke_requests for word in user_words):
-            return {"animation": "laughing", "msg": "I got a joke for you." + robot_jokes[randint(0, len(robot_jokes) -1)]}
+            return {"animation": "laughing", "msg": "ok..." + robot_jokes[randint(0, len(robot_jokes) -1)]}
 
 
 def processUserMsgLevel3(msg):
@@ -54,21 +54,33 @@ def processUserMsgLevel3(msg):
 
 
 def processUserMsgLevel2(msg):
-    botoLevel2 = {
-        "what is the time": {"animation": "waiting", "msg": "Dude, Im not your watch! alright...  "},
-        "how do you feel?": {"animation": "bored", "msg": "like...soooo bored"},
-        "new": {"animation": "takeoff", "msg": ["some news 1", "some news2", "some news 3", "some news4"]}
-    }
-    if msg.endswith('?'):
-        msg = msg.replace(msg[len(msg) - 1], '')
 
-    if msg in botoLevel2:
-            return {"animation": botoLevel2[msg]["animation"], "msg": botoLevel2[msg]["msg"]}
-    return None
+        fact_request = ["fact","fun","facts","news","learn","teach", "new"]
+        fun_facts =["Banging your head against a wall burns 150 calories an hour.",
+             "In the UK, it is illegal to eat mince pies on Christmas Day!",
+             "Pteronophobia is the fear of being tickled by feathers!",
+             "When hippos are upset, their sweat turns red.",
+             "A flock of crows is known as a murder.",
+            "'Facebook Addiction Disorder' is a mental disorder identified by Psychologists.",
+             "The average woman uses her height in lipstick every 5 years.",
+             "29th May is officially “Put a Pillow on Your Fridge Day“.",
+             "Cherophobia is the fear of fun.",
+             "Human saliva has a boiling point three times that of regular water.",
+             "If you lift a kangaroo’s tail off the ground it can’t hop."
+]
+        if msg.endswith('?'):
+            msg = msg.replace(msg[len(msg) - 1], '')
+        user_words = msg.split(" ")
+        for word in user_words:
+            if any(word in fact_request for word in user_words):
+                return {"animation": "laughing", "msg": "ok..." + fun_facts[randint(0, len(fun_facts) -1)]}
+        return None
 
 def processUserMsgLevel1(msg):
     botoLevel1 = {
         "hi": {"animation": "inlove", "msg": "hi " + boto_memory["user_name"]},
+        "what is the time": {"animation": "waiting", "msg": "Dude, Im not your watch! alright...  "},
+        "how do you feel?": {"animation": "bored", "msg": "like...soooo bored"},
         "dog": {"animation": "dog", "msg": "I love dogs"},
         "name": {"animation": "excited", "msg": "that is the most beautiful name I've ever heard!"},
         "time": {"animation": "waiting", "msg": "I am not your clock...  " + time.ctime()},
@@ -95,12 +107,7 @@ def chat():
         response.set_cookie("user_name",boto_memory["user_name"])
         return {"animation": "inlove", "msg": "Nice to meet you " + boto_memory["user_name"]}
 
-    # suffix = '?'
-    #
-    # elif 'love' in user_message or 'loving' in user_message or 'in-love' in user_message:
-    #     return json.dumps({"animation": "inlove", "msg": "spread the love, my friend"})
-    # elif user_message.endswith(suffix)
-    #
+
 
     result5 = processUserMsgLevel5(user_message)
     if result5:
