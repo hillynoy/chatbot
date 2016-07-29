@@ -16,11 +16,11 @@ def index():
 
 
 
-
-
 def processUserMsgLevel5(msg):
     how_are_you = ['how are you', 'feel', 'feeling', 'how are you feeling', 'how you doin', 'doing']
     feel_response = ["im sooo bored today", "I feel just perfect!", "Im doing great", "I'm really tired!", "starving!!!" ]
+    if msg.endswith('?'):
+        msg = msg.replace(msg[len(msg) - 1], '')
     user_words = msg.split(" ")
     for word in user_words:
         if any(word in how_are_you for word in user_words):
@@ -32,6 +32,8 @@ def processUserMsgLevel4(msg):
                    'Jack: Why was the robot angry? Ben: Beats me. Jack: Because someone kept pushing his buttons!',
                    'Billy: What did the man say to his dead robot? Bob: What? Billy: “Rust in peace.”'
 ]
+    if msg.endswith('?'):
+        msg = msg.replace(msg[len(msg) - 1], '')
     user_words = msg.split(" ")
     for word in user_words:
         if any(word in joke_requests for word in user_words):
@@ -41,6 +43,8 @@ def processUserMsgLevel4(msg):
 def processUserMsgLevel3(msg):
     negative_list = ['no', 'dont', 'not']
     feelings_list = ["angry", "sad", "pissed", "stupid", "terrible"]
+    if msg.endswith('?'):
+        msg = msg.replace(msg[len(msg) - 1], '')
     user_words = msg.split(" ")
     for word in user_words:
         if any(word in negative_list for word in user_words):
@@ -51,11 +55,13 @@ def processUserMsgLevel3(msg):
 
 def processUserMsgLevel2(msg):
     botoLevel2 = {
-        "what is the time?": {"animation": "waiting", "msg": "Dude, Im not your watch! alright...  "},
+        "what is the time": {"animation": "waiting", "msg": "Dude, Im not your watch! alright...  "},
         "how do you feel?": {"animation": "bored", "msg": "like...soooo bored"},
-        "what is new in the world?": {"animation": "takeoff",
-                                      "msg": ["some news 1", "some news2", "some news 3", "some news4"]}
+        "new": {"animation": "takeoff", "msg": ["some news 1", "some news2", "some news 3", "some news4"]}
     }
+    if msg.endswith('?'):
+        msg = msg.replace(msg[len(msg) - 1], '')
+
     if msg in botoLevel2:
             return {"animation": botoLevel2[msg]["animation"], "msg": botoLevel2[msg]["msg"]}
     return None
@@ -65,12 +71,17 @@ def processUserMsgLevel1(msg):
         "hi": {"animation": "inlove", "msg": "hi " + boto_memory["user_name"]},
         "dog": {"animation": "dog", "msg": "I love dogs"},
         "name": {"animation": "excited", "msg": "that is the most beautiful name I've ever heard!"},
-        "time": {"animation": "waiting", "msg": "I am not your clock...  " + time.ctime()}
+        "time": {"animation": "waiting", "msg": "I am not your clock...  " + time.ctime()},
+        "money": {"animation": "money", "msg": "I'm broke"}
+
     }
+    if msg.endswith('?'):
+        msg = msg.replace(msg[len(msg)-1], '')
     user_words = msg.split(" ")
+
     for word in user_words:
         if word in botoLevel1:
-            word = word.replace(word+"?","").replace("!","")
+            # word = word.replace(word+"?","").replace("!","")
             return {"animation": botoLevel1[word]["animation"], "msg": botoLevel1[word]["msg"]}
     return None
 
@@ -84,6 +95,12 @@ def chat():
         response.set_cookie("user_name",boto_memory["user_name"])
         return {"animation": "inlove", "msg": "Nice to meet you " + boto_memory["user_name"]}
 
+    # suffix = '?'
+    #
+    # elif 'love' in user_message or 'loving' in user_message or 'in-love' in user_message:
+    #     return json.dumps({"animation": "inlove", "msg": "spread the love, my friend"})
+    # elif user_message.endswith(suffix)
+    #
 
     result5 = processUserMsgLevel5(user_message)
     if result5:
@@ -104,8 +121,7 @@ def chat():
                     result1 = processUserMsgLevel1(user_message)
                     if not result1:
                         return json.dumps({"animation": "crying", "msg": "Man, I don't get you today...."})
-                # elif 'love' in user_message or "loving" in user_message or "in-love" in user_message:
-                #     return json.dumps({"animation": "inlove", "msg": "spread the love, my friend"})
+
                     else:
                         return json.dumps(result1)
 
